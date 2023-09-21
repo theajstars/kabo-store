@@ -22,7 +22,7 @@ import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
 
-export default function Login() {
+export default function Register() {
   interface FormValues {
     email: string;
     password: string;
@@ -39,7 +39,7 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container flex-row width-100">
+    <div className="register-container flex-row width-100">
       <div className="content">
         <CardContent>
           <Box
