@@ -3,9 +3,18 @@
 .dashboard-container {
   align-items: center;
   justify-content: center;
-  margin-top: 50px;
+
   .logo {
     height: 100px;
+  }
+  .profile {
+    height: 60px;
+    background-color: #fff;
+    max-width: 800px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
   }
   .menu {
     width: 100%;

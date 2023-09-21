@@ -17,6 +17,13 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container flex-col width-100">
       <img src={Logo} alt="" className="logo" />
+      <div className="profile flex-row align-center justify-between width-100 text-dark">
+        <div className="item flex-row">
+          <span className="icon px-20 flex-row align-center justify-center">
+            <i className="far fa-user" />
+          </span>
+        </div>
+      </div>
       <div className="menu flex-row align-center">
         <div className="item justify-between flex-col">
           <img src={OrdersIcon} alt="" />
