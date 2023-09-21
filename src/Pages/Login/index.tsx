@@ -1,41 +1,66 @@
 import React, { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Box,
-  Card,
   CardContent,
   Typography,
   TextField,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
   Checkbox,
   Button,
-  CircularProgress,
   FormControlLabel,
 } from "@mui/material";
-
+import { useToasts } from "react-toast-notifications";
 import { appConfig } from "../../Lib/appConfig";
+
+import { PerformRequest } from "../../Lib/PerformRequest";
+import { Endpoints } from "../../Lib/Endpoints";
+import { LoginResponse } from "../../Lib/Responses";
+import { validateEmail } from "../../Lib/Methods";
+import ProgressCircle from "../../Misc/ProgressCircle";
+
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
-
+interface FormValues {
+  email: string;
+  password: string;
+  showPassword: boolean;
+}
 export default function Login() {
-  interface FormValues {
-    email: string;
-    password: string;
-    showPassword: boolean;
-  }
+  const navigate = useNavigate();
+  const { addToast, removeAllToasts } = useToasts();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
     password: "",
     showPassword: false,
   });
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    removeAllToasts();
     e.preventDefault();
+    const { email, password } = formValues;
+    const isEmailValid = validateEmail(email);
+    if (isEmailValid && password.length > 4) {
+      setLoading(true);
+      const r: LoginResponse = await PerformRequest({
+        method: "POST",
+        data: { email, passcode: password },
+        endpoint: Endpoints.LoginUser,
+      }).catch(() => setLoading(false));
+      setLoading(false);
+      if (r && r.data.status === "success") {
+        addToast("Log in successful", { appearance: "success" });
+        navigate("/dashboard");
+      } else {
+        addToast(r.data.message, { appearance: "error" });
+      }
+      console.log(r);
+    }
+    if (!isEmailValid) {
+      addToast("Please enter a valid email!", { appearance: "error" });
+    }
   };
 
   return (
@@ -70,28 +95,49 @@ export default function Login() {
               fullWidth
               id="email"
               label="Email"
+              size="small"
               type={"email"}
-              sx={{ marginBottom: 4 }}
               value={formValues.email}
               onChange={(e) =>
                 setFormValues({ ...formValues, email: e.target.value })
               }
             />
-            <FormControl fullWidth>
-              <InputLabel htmlFor="auth-login-password">Password</InputLabel>
-              <OutlinedInput
-                label="Password"
-                value={formValues.password}
-                id="auth-login-password"
-                onChange={(e) =>
-                  setFormValues({ ...formValues, password: e.target.value })
-                }
-                type={formValues.showPassword ? "text" : "password"}
-              />
-            </FormControl>
+            <br />
+            <br />
+            <TextField
+              autoFocus
+              fullWidth
+              id="password"
+              label="password"
+              size="small"
+              type={formValues.showPassword ? "text" : "password"}
+              value={formValues.password}
+              onChange={(e) =>
+                setFormValues({ ...formValues, password: e.target.value })
+              }
+            />
+
+            <br />
+            <small
+              className="px-12 pointer text-dark"
+              onClick={() => {
+                setFormValues({
+                  ...formValues,
+                  showPassword: !formValues.showPassword,
+                });
+              }}
+            >
+              {formValues.showPassword ? "Hide" : "Show"} Password &nbsp;
+              {formValues.showPassword ? (
+                <i className="far fa-eye-slash" />
+              ) : (
+                <i className="far fa-eye" />
+              )}
+            </small>
             <Box
               sx={{
-                mb: 4,
+                mt: 2,
+                mb: 2,
                 display: "flex",
                 alignItems: "center",
                 flexWrap: "wrap",
@@ -101,8 +147,14 @@ export default function Login() {
               <FormControlLabel control={<Checkbox />} label="Remember Me" />
             </Box>
 
-            <Button fullWidth size="large" variant="contained" type="submit">
-              {isLoading ? <CircularProgress color="inherit" /> : "Login"}
+            <Button
+              fullWidth
+              size="large"
+              sx={{ height: "35px" }}
+              variant="contained"
+              type="submit"
+            >
+              {isLoading ? <ProgressCircle /> : "Login"}
             </Button>
           </form>
           <br />

@@ -21,6 +21,7 @@ import { appConfig } from "../../Lib/appConfig";
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
+import { LoginResponse } from "../../Lib/Responses";
 
 export default function Register() {
   interface FormValues {
