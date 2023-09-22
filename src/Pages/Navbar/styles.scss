@@ -1,0 +1,17 @@
+@import "../../Variables.scss";
+
+.navbar-container {
+  box-sizing: border-box;
+  padding: 10px 20px;
+  padding-bottom: 0;
+  .items {
+    img {
+      height: 60px;
+      margin-top: 6px;
+    }
+    .item {
+      font-size: 15px;
+      margin: 0 15px;
+    }
+  }
+}

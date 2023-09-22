@@ -20,6 +20,7 @@ import { LoginResponse } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import Products from "../Products";
 import Dashboard from "../Dashboard";
+import Navbar from "../Navbar";
 
 const AppContext = createContext<User | null>(null);
 export default function DashboardContainer() {
@@ -46,6 +47,7 @@ export default function DashboardContainer() {
 
   return (
     <AppContext.Provider value={user}>
+      <Navbar />
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />

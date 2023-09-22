@@ -18,6 +18,7 @@ $OrangePrimary: #ffa412;
 $YellowLight: #fff4de;
 
 $RedLight: #ffe2e5;
+$RedPrimary: #ff3300;
 
 $GreenLight: #dcfce7;
 $GreenPrimary: #037c50;
@@ -51,4 +52,7 @@ $GreenPrimary: #037c50;
 
 .text-green-primary {
   color: $GreenPrimary;
+}
+.text-red-primary {
+  color: $RedPrimary;
 }
