@@ -75,7 +75,12 @@ export default function Dashboard() {
                 <span className="px-15 text-dark">
                   View delivered, failed and successful orders
                 </span>
-                <button>View</button>
+                <Link
+                  className="flex-row align-center justify-center"
+                  to="/dashboard/orders"
+                >
+                  View
+                </Link>
               </div>
             </div>
             <div className="item justify-between flex-col">
@@ -85,7 +90,12 @@ export default function Dashboard() {
                 <span className="px-15 text-dark">
                   View catalogue of products
                 </span>
-                <button>View</button>
+                <Link
+                  className="flex-row align-center justify-center"
+                  to="/dashboard/products"
+                >
+                  View
+                </Link>
               </div>
             </div>
           </div>
