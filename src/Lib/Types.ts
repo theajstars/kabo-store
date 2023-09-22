@@ -29,6 +29,12 @@ export interface Category {
   category_name: string;
   img: string;
 }
+export interface SubCategory {
+  category_id: string;
+  category_name: string;
+  sub_category_id: string;
+  sub_category_name: string;
+}
 export interface Product {
   id: string;
   name: string;

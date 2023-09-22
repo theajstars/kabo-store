@@ -1,4 +1,4 @@
-import { Product, Store, User } from "./Types";
+import { Category, Product, Store, SubCategory, User } from "./Types";
 
 type ResponseStatus = "success" | "failed";
 export interface DefaultResponse {
@@ -39,5 +39,31 @@ export interface GetStoreListResponse {
     totalPages: number;
     currentPage: number;
     listPerPage: string;
+  };
+}
+export interface GetCategoriesResponse {
+  data: {
+    token: string;
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+    data: Category[];
+  };
+}
+export interface GetSubCategoriesResponse {
+  data: {
+    token: string;
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+    data: SubCategory[];
+  };
+}
+export interface UploadFileResponse {
+  data: {
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+    file_url: string;
   };
 }
