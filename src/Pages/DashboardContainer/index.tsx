@@ -51,6 +51,7 @@ export default function DashboardContainer() {
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/new-product" element={<Products />} />
       </Routes>
     </AppContext.Provider>
   );

@@ -8,6 +8,7 @@ import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
 import Products from "./Pages/Products";
 import DashboardContainer from "./Pages/DashboardContainer";
+import NewProduct from "./Pages/NewProduct";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardContainer />}>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard/products" element={<Products />} />
+            <Route path="/dashboard/new-product" element={<NewProduct />} />
           </Route>
         </Routes>
       </Router>
