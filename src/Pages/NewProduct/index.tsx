@@ -33,98 +33,30 @@ export default function NewProduct() {
   // Product Search Params Begin
   const [page, setPage] = useState<string>("");
   // Product Search Params End
-  const getProducts = async () => {
-    const token = Cookies.get("token");
-    setLoading(true);
-    const r: GetProductsResponse = await PerformRequest({
-      route: Endpoints.GetProducts,
-      method: "POST",
-      data: { token: token },
-    }).catch(() => {
-      setLoading(false);
-    });
-    setLoading(false);
-    if (r.data && r.data.data) {
-      setProducts(r.data.data);
-    }
-  };
-  useEffect(() => {
-    getProducts();
-  }, []);
 
-  const tableColProps: GridColTypeDef = {
-    flex: 1,
-  };
-  const tableColumns: GridColDef<Product>[] = [
-    {
-      field: "name",
-      headerName: "Name",
-      // ...tableColProps,
-      width: 220,
-    },
+  useEffect(() => {}, []);
 
-    {
-      field: "amount",
-      headerName: "Amount",
-      ...tableColProps,
-    },
-    {
-      field: "quantity",
-      headerName: "Quantity",
-      ...tableColProps,
-    },
-    {
-      field: "category_name",
-      headerName: "Categrory",
-      ...tableColProps,
-    },
-    {
-      field: "store_name",
-      headerName: "Store",
-      ...tableColProps,
-    },
-    {
-      field: "active",
-      headerName: "Status",
-      ...tableColProps,
-      renderCell: (params) => {
-        return (
-          <span
-            className={
-              params.row.active === "Yes"
-                ? "text-green-primary"
-                : "text-red-primary"
-            }
-          >
-            {params.row.active === "Yes" ? "Active" : "Inactive"}
-          </span>
-        );
-      },
-    },
-  ];
   return (
     <div className="products-container flex-col width-100">
       {userContext ? (
         <>
           <div className="top width-100 flex-col">
             <div className="flex-row width-100 align-center justify-between">
-              <span className="text-dark fw-500 px-20">Products</span>
+              <span className="text-dark fw-500 px-20">New Product</span>
               <Button
+                href="/dashboard/products"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/dashboard/products");
+                }}
                 sx={{ height: "35px", fontSize: "12px" }}
                 variant="contained"
                 type="button"
               >
-                Add New
+                Back to Products
               </Button>
             </div>
           </div>
-          <DataGrid
-            loading={isLoading}
-            className="table"
-            columns={tableColumns}
-            rows={products}
-            getRowId={(row) => row.id}
-          />
         </>
       ) : (
         <MegaLoader />

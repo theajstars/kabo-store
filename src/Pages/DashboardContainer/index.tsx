@@ -21,6 +21,7 @@ import MegaLoader from "../../Misc/MegaLoader";
 import Products from "../Products";
 import Dashboard from "../Dashboard";
 import Navbar from "../Navbar";
+import NewProduct from "../NewProduct";
 
 const AppContext = createContext<User | null>(null);
 export default function DashboardContainer() {
@@ -51,7 +52,7 @@ export default function DashboardContainer() {
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/new-product" element={<Products />} />
+        <Route path="/new-product" element={<NewProduct />} />
       </Routes>
     </AppContext.Provider>
   );
