@@ -20,6 +20,7 @@ $YellowLight: #fff4de;
 $RedLight: #ffe2e5;
 
 $GreenLight: #dcfce7;
+$GreenPrimary: #037c50;
 
 .text-dark {
   color: $DarkDefault;
@@ -27,12 +28,14 @@ $GreenLight: #dcfce7;
 .text-dark-secondary {
   color: $DarkSecondary;
 }
+
 .text-blue-default {
   color: $BlueDefault;
 }
 .text-purple {
   color: $PurpleDefault;
 }
+
 .text-orange-light {
   color: $OrangeLight;
 }
@@ -45,6 +48,7 @@ $GreenLight: #dcfce7;
 .text-white {
   color: $White;
 }
-.text-blue-default {
-  color: $BlueDefault;
+
+.text-green-primary {
+  color: $GreenPrimary;
 }
