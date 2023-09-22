@@ -6,6 +6,8 @@ import { ToastProvider } from "react-toast-notifications";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
+import Products from "./Pages/Products";
+import DashboardContainer from "./Pages/DashboardContainer";
 
 function App() {
   return (
@@ -15,7 +17,10 @@ function App() {
           <Route index element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardContainer />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/dashboard/products" element={<Products />} />
+          </Route>
         </Routes>
       </Router>
     </ToastProvider>

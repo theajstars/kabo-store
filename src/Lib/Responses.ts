@@ -1,16 +1,30 @@
-import { User } from "./Types";
+import { Product, User } from "./Types";
 
+type ResponseStatus = "success" | "failed";
 export interface DefaultResponse {
-  status: "success" | "failed";
+  status: ResponseStatus;
   response_code: number;
   message: string;
 }
 export interface LoginResponse {
-  token: string;
   data: {
-    status: "success" | "failed";
+    token: string;
+    status: ResponseStatus;
     response_code: number;
     message: string;
     data: User;
+  };
+}
+export interface GetProductsResponse {
+  data: {
+    token: string;
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+    data: Product[];
+    counts: number;
+    totalPages: number;
+    currentPage: number;
+    listPerPage: string;
   };
 }

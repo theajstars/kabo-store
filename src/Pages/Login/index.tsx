@@ -11,6 +11,7 @@ import {
   Button,
   FormControlLabel,
 } from "@mui/material";
+import Cookies from "js-cookie";
 import { useToasts } from "react-toast-notifications";
 import { appConfig } from "../../Lib/appConfig";
 
@@ -23,14 +24,12 @@ import ProgressCircle from "../../Misc/ProgressCircle";
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
-import { User } from "../../Lib/Types";
 interface FormValues {
   email: string;
   password: string;
   showPassword: boolean;
 }
 export default function Login() {
-  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
   const { addToast, removeAllToasts } = useToasts();
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -39,13 +38,6 @@ export default function Login() {
     password: "",
     showPassword: false,
   });
-
-  const getUser = async () => {
-    // const r:  = await PerformRequest()
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     removeAllToasts();
@@ -57,10 +49,12 @@ export default function Login() {
       const r: LoginResponse = await PerformRequest({
         method: "POST",
         data: { email, passcode: password },
-        endpoint: Endpoints.LoginUser,
+        route: Endpoints.LoginUser,
       }).catch(() => setLoading(false));
       setLoading(false);
       if (r && r.data.status === "success") {
+        console.log(r.data);
+        Cookies.set("token", r.data.token);
         addToast("Log in successful", { appearance: "success" });
         navigate("/dashboard");
       } else {
@@ -75,109 +69,107 @@ export default function Login() {
 
   return (
     <div className="login-container flex-row width-100">
-      {user && (
-        <div className="content">
-          <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+      <div className="content">
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img src={Logo} alt="" className="logo" />
+          </Box>
+
+          <Box sx={{ mb: 6 }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 600, marginBottom: 1.5 }}
+            >
+              Welcome to {appConfig.appName}!
+            </Typography>
+            <Typography variant="body2">
+              Please sign-in to your account and start the adventure
+            </Typography>
+          </Box>
+
+          <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <TextField
+              autoFocus
+              fullWidth
+              id="email"
+              label="Email"
+              size="small"
+              type={"email"}
+              value={formValues.email}
+              onChange={(e) =>
+                setFormValues({ ...formValues, email: e.target.value })
+              }
+            />
+            <br />
+            <br />
+            <TextField
+              autoFocus
+              fullWidth
+              id="password"
+              label="password"
+              size="small"
+              type={formValues.showPassword ? "text" : "password"}
+              value={formValues.password}
+              onChange={(e) =>
+                setFormValues({ ...formValues, password: e.target.value })
+              }
+            />
+
+            <br />
+            <small
+              className="px-12 pointer text-dark"
+              onClick={() => {
+                setFormValues({
+                  ...formValues,
+                  showPassword: !formValues.showPassword,
+                });
               }}
             >
-              <img src={Logo} alt="" className="logo" />
+              {formValues.showPassword ? "Hide" : "Show"} Password &nbsp;
+              {formValues.showPassword ? (
+                <i className="far fa-eye-slash" />
+              ) : (
+                <i className="far fa-eye" />
+              )}
+            </small>
+            <Box
+              sx={{
+                mt: 2,
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              <FormControlLabel control={<Checkbox />} label="Remember Me" />
             </Box>
 
-            <Box sx={{ mb: 6 }}>
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: 600, marginBottom: 1.5 }}
-              >
-                Welcome to {appConfig.appName}!
-              </Typography>
-              <Typography variant="body2">
-                Please sign-in to your account and start the adventure
-              </Typography>
-            </Box>
-
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-              <TextField
-                autoFocus
-                fullWidth
-                id="email"
-                label="Email"
-                size="small"
-                type={"email"}
-                value={formValues.email}
-                onChange={(e) =>
-                  setFormValues({ ...formValues, email: e.target.value })
-                }
-              />
-              <br />
-              <br />
-              <TextField
-                autoFocus
-                fullWidth
-                id="password"
-                label="password"
-                size="small"
-                type={formValues.showPassword ? "text" : "password"}
-                value={formValues.password}
-                onChange={(e) =>
-                  setFormValues({ ...formValues, password: e.target.value })
-                }
-              />
-
-              <br />
-              <small
-                className="px-12 pointer text-dark"
-                onClick={() => {
-                  setFormValues({
-                    ...formValues,
-                    showPassword: !formValues.showPassword,
-                  });
-                }}
-              >
-                {formValues.showPassword ? "Hide" : "Show"} Password &nbsp;
-                {formValues.showPassword ? (
-                  <i className="far fa-eye-slash" />
-                ) : (
-                  <i className="far fa-eye" />
-                )}
-              </small>
-              <Box
-                sx={{
-                  mt: 2,
-                  mb: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
-                }}
-              >
-                <FormControlLabel control={<Checkbox />} label="Remember Me" />
-              </Box>
-
-              <Button
-                fullWidth
-                size="large"
-                sx={{ height: "35px" }}
-                variant="contained"
-                type="submit"
-              >
-                {isLoading ? <ProgressCircle /> : "Login"}
-              </Button>
-            </form>
-            <br />
-            <div className="flex-row align-center justify-between">
-              <span className="px-14">Don't have an account?</span>
-              <Link className="text-blue-default" to="/register">
-                Create an account
-              </Link>
-            </div>
-          </CardContent>
-        </div>
-      )}
+            <Button
+              fullWidth
+              size="large"
+              sx={{ height: "35px" }}
+              variant="contained"
+              type="submit"
+            >
+              {isLoading ? <ProgressCircle /> : "Login"}
+            </Button>
+          </form>
+          <br />
+          <div className="flex-row align-center justify-between">
+            <span className="px-14">Don't have an account?</span>
+            <Link className="text-blue-default" to="/register">
+              Create an account
+            </Link>
+          </div>
+        </CardContent>
+      </div>
     </div>
   );
 }

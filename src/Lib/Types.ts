@@ -1,17 +1,16 @@
 export interface User {
-  username: string;
-  lastname: string;
-  othernames: string;
-  email: string;
-  phone: string;
+  address: string;
   bank_details: {
     account_no: string;
     bank_name: string;
     bank_code: string;
   };
-  photo: string;
-  address: string;
+  email: string;
   gender: string;
+  lastname: string;
+  othernames: string;
+  phone: string;
+  photo: string;
   role: {
     superAdmin: "No";
     admin: "No" | "Yes";
@@ -22,4 +21,33 @@ export interface User {
     admin: null | string;
     rider: null | string;
   };
+  username: string;
+}
+
+export interface Category {
+  category_id: string;
+  category_name: string;
+  img: string;
+}
+export interface Product {
+  id: string;
+  name: string;
+  amount: string;
+  constant_amount: string;
+  details: string;
+  active: "Yes" | "No";
+  category_id: string;
+  category_name: string;
+  sub_category_id: string;
+  sub_category_name: string;
+  quantity: string;
+  weight: string;
+  main_photo: string;
+  location: string;
+  photo_a: string;
+  photo_b: string;
+  photo_c: string;
+  photo_d: string;
+  store_id: string;
+  store_name: string;
 }
