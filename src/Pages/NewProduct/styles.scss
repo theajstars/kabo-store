@@ -1,6 +1,6 @@
 @import "../../Variables.scss";
 
-.products-container {
+.new-product-container {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
@@ -9,12 +9,4 @@
     padding: 30px;
     padding-bottom: 0px;
   }
-  .table {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 30px;
-  }
-}
-.css-5wly58-MuiDataGrid-root {
-  border: none !important;
 }

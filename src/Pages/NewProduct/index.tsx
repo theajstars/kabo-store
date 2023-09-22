@@ -37,7 +37,7 @@ export default function NewProduct() {
   useEffect(() => {}, []);
 
   return (
-    <div className="products-container flex-col width-100">
+    <div className="new-product-container flex-col width-100">
       {userContext ? (
         <>
           <div className="top width-100 flex-col">

@@ -45,7 +45,7 @@ export default function Dashboard() {
       {user ? (
         <>
           <img src={Logo} alt="" className="logo" />
-          <div className="profile flex-row align-center justify-between width-100 text-dark">
+          <div className="profile flex-row align-center width-100 text-dark">
             <div className="item flex-row align-center">
               <span className="icon px-18 flex-row align-center justify-center">
                 <i className="far fa-user" />
@@ -60,12 +60,12 @@ export default function Dashboard() {
               </span>
               <span className="tag px-14">{user.email}</span>
             </div>
-            <div className="item flex-row align-center">
+            {/* <div className="item flex-row align-center">
               <span className="icon px-18 flex-row align-center justify-center">
                 <i className="far fa-user-tie" />
               </span>
               <span className="tag px-14">{user.email}</span>
-            </div>
+            </div> */}
           </div>
           <div className="menu flex-row align-center">
             <div className="item justify-between flex-col">

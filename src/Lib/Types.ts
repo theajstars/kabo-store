@@ -51,3 +51,20 @@ export interface Product {
   store_id: string;
   store_name: string;
 }
+export interface Store {
+  store_id: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  area: string;
+  address: string;
+  description: string;
+  verified: "No" | "Yes";
+  photo: string;
+  contact_person: {
+    fullname: string;
+    phone: string;
+    email: string;
+  };
+}
