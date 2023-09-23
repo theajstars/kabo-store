@@ -32,7 +32,11 @@ export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
 
   // Product Search Params Begin
-  const [page, setPage] = useState<string>("");
+  const [rowCount, setRowCount] = useState<number>(0);
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 10,
+    page: 0,
+  });
   // Product Search Params End
   const getProducts = async () => {
     const token = Cookies.get("token");
@@ -40,18 +44,24 @@ export default function Products() {
     const r: GetProductsResponse = await PerformRequest({
       route: Endpoints.GetProducts,
       method: "POST",
-      data: { token: token },
+      data: {
+        token: token,
+        page: paginationModel.page,
+        limit: paginationModel.pageSize,
+      },
     }).catch(() => {
       setLoading(false);
     });
     setLoading(false);
     if (r.data && r.data.data) {
       setProducts(r.data.data);
+      setRowCount(r.data.counts);
     }
   };
   useEffect(() => {
+    console.log("This sum bs: ", paginationModel);
     getProducts();
-  }, []);
+  }, [paginationModel]);
 
   const tableColProps: GridColTypeDef = {
     flex: 1,
@@ -133,6 +143,10 @@ export default function Products() {
               columns={tableColumns}
               rows={products}
               getRowId={(row) => row.id}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              pageSizeOptions={[5, 10, 25]}
+              rowCount={rowCount}
             />
           )}
         </>

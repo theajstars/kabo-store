@@ -13,6 +13,7 @@ import { PerformRequest, UploadFile } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
 import { Product, Store, Category, SubCategory } from "../../Lib/Types";
 import {
+  CreateProductResponse,
   GetCategoriesResponse,
   GetStoreListResponse,
   GetSubCategoriesResponse,
@@ -89,6 +90,22 @@ export default function NewProduct() {
     getCategories();
   }, []);
 
+  const ClearForm = () => {
+    setLoading(true);
+    setProductFile(undefined);
+    setProduct({
+      name: "",
+      amount: 0,
+      quantity: 0,
+      weight: 0,
+      details: "",
+      store: "",
+      category: "",
+      subCategory: "",
+      main_photo: "",
+    });
+    setLoading(false);
+  };
   const CreateNewProduct = async () => {
     const {
       name,
@@ -129,12 +146,17 @@ export default function NewProduct() {
         main_photo,
         active: "Yes",
       };
-      const r = await PerformRequest({
+      const r: CreateProductResponse = await PerformRequest({
         method: "POST",
         data,
         route: Endpoints.CreateNewProduct,
       });
-      console.log(r);
+      if (r.data && r.data.status === "success") {
+        addToast("Store created successfully!", { appearance: "success" });
+        ClearForm();
+      } else {
+        addToast("An error occurred", { appearance: "error" });
+      }
     }
   };
   return (
@@ -208,6 +230,7 @@ export default function NewProduct() {
           >
             <TextField
               label="Name"
+              spellCheck={false}
               variant="outlined"
               value={product.name}
               onChange={(e) => setProduct({ ...product, name: e.target.value })}
@@ -271,11 +294,13 @@ export default function NewProduct() {
             ))}
           </TextField>
           <TextField
+            spellCheck={false}
             onChange={(e) => {
               setProduct({ ...product, details: e.target.value });
               console.log(e.target.value);
             }}
             label="Product Details"
+            value={product.details}
             rows={4}
             sx={{
               m: 1,

@@ -67,3 +67,10 @@ export interface UploadFileResponse {
     file_url: string;
   };
 }
+export interface CreateProductResponse {
+  data: {
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+  };
+}
