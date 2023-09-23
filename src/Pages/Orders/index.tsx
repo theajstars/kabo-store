@@ -23,7 +23,7 @@ import { GridColDef, GridColTypeDef } from "@mui/x-data-grid/models";
 import { Button } from "@mui/material";
 import ProgressCircle from "../../Misc/ProgressCircle";
 
-export default function Products() {
+export default function Orders() {
   const navigate = useNavigate();
   const userContext = useContext(AppContext);
   const { addToast, removeAllToasts } = useToasts();

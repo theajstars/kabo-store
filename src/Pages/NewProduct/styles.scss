@@ -8,4 +8,8 @@
     box-sizing: border-box;
     padding: 30px;
   }
+  .product-image {
+    height: 150px;
+    object-fit: contain;
+  }
 }

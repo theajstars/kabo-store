@@ -22,8 +22,13 @@ import Products from "../Products";
 import Dashboard from "../Dashboard";
 import Navbar from "../Navbar";
 import NewProduct from "../NewProduct";
+import Orders from "../Orders";
 
-const AppContext = createContext<User | null>(null);
+interface AppContextProps {
+  user: User | null;
+  logout: () => void;
+}
+const AppContext = createContext<AppContextProps | null>(null);
 export default function DashboardContainer() {
   const navigate = useNavigate();
   const { addToast, removeAllToasts } = useToasts();
@@ -46,12 +51,17 @@ export default function DashboardContainer() {
     getUser();
   }, []);
 
+  const logout = () => {
+    Cookies.remove("token");
+    navigate("/login");
+  };
   return (
-    <AppContext.Provider value={user}>
+    <AppContext.Provider value={{ user: user, logout: logout }}>
       <Navbar />
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/new-product" element={<NewProduct />} />
       </Routes>
     </AppContext.Provider>

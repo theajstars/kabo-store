@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-
-import {
-  Box,
-  CardContent,
-  Typography,
-  TextField,
-  Checkbox,
-  Button,
-  FormControlLabel,
-} from "@mui/material";
-import Cookies from "js-cookie";
-import { useToasts } from "react-toast-notifications";
-import { appConfig } from "../../Lib/appConfig";
-
-import { PerformRequest } from "../../Lib/PerformRequest";
-import { Endpoints } from "../../Lib/Endpoints";
-import { LoginResponse } from "../../Lib/Responses";
-import { validateEmail } from "../../Lib/Methods";
-import ProgressCircle from "../../Misc/ProgressCircle";
 
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
-interface FormValues {
-  email: string;
-  password: string;
-  showPassword: boolean;
-}
+import { AppContext } from "../DashboardContainer";
+
 export default function Navbar() {
   const navigate = useNavigate();
-  const { addToast, removeAllToasts } = useToasts();
+  const userContext = useContext(AppContext);
 
   return (
-    <div className="navbar-container flex-row width-100">
+    <div className="navbar-container flex-row align-center width-100 justify-between">
       <div className="items flex-row align-center">
         <Link to="/dashboard">
           <img src={Logo} alt="" />
@@ -46,6 +24,14 @@ export default function Navbar() {
           Orders
         </Link>
       </div>
+      <span
+        className="flex-row align-center text-blue-default pointer"
+        onClick={() => {
+          userContext?.logout();
+        }}
+      >
+        Logout &nbsp; <i className="fal fa-sign-out" />
+      </span>
     </div>
   );
 }

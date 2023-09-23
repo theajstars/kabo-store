@@ -16,6 +16,7 @@ import {
   GetCategoriesResponse,
   GetStoreListResponse,
   GetSubCategoriesResponse,
+  UploadFileResponse,
 } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
@@ -88,21 +89,91 @@ export default function NewProduct() {
     getCategories();
   }, []);
 
+  const CreateNewProduct = async () => {
+    const {
+      name,
+      store,
+      category,
+      subCategory,
+      main_photo,
+      amount,
+      quantity,
+      weight,
+      details,
+    } = product;
+    if (
+      name.length === 0 ||
+      store?.length === 0 ||
+      category?.length === 0 ||
+      subCategory?.length === 0 ||
+      main_photo?.length === 0 ||
+      details?.length === 0 ||
+      !amount ||
+      !weight ||
+      !quantity ||
+      amount < 1 ||
+      weight < 0
+    ) {
+      addToast("Please fill the form correctly", { appearance: "warning" });
+    } else {
+      const data = {
+        token: token,
+        store_id: store,
+        name,
+        quantity,
+        amount,
+        details,
+        weight,
+        category_id: category,
+        sub_category_id: subCategory,
+        main_photo,
+        active: "Yes",
+      };
+      const r = await PerformRequest({
+        method: "POST",
+        data,
+        route: Endpoints.CreateNewProduct,
+      });
+      console.log(r);
+    }
+  };
   return (
     <div className="new-product-container flex-col width-100">
       <input
         type="file"
+        accept="image/*"
         ref={productImageRef}
         onChange={(e) => {
           const FileList = e.target.files ?? [];
           const file = FileList[0];
           if (file) {
-            setProductFile(file);
-            setImageUploading(true);
-            UploadFile(file).catch(() => {
-              setImageUploading(false);
-            });
-            setImageUploading(false);
+            removeAllToasts();
+            const type = file.type;
+            const fileType = type.substring(0, type.indexOf("/")); //Should return "image"
+            if (fileType !== "image") {
+              addToast("Please upload an image file!", {
+                appearance: "warning",
+              });
+            } else {
+              setImageUploading(true);
+              removeAllToasts();
+              UploadFile(file)
+                .catch(() => {
+                  setImageUploading(false);
+                })
+                .then((res: UploadFileResponse) => {
+                  if (res.data && res.data.status === "success") {
+                    setProductFile(file);
+                    setProduct({ ...product, main_photo: res.data.file_url });
+                  }
+                  if (res.data && res.data.status === "failed") {
+                    addToast(res.data.message, { appearance: "error" });
+                  }
+                })
+                .finally(() => {
+                  setImageUploading(false);
+                });
+            }
           }
         }}
         className="display-none"
@@ -270,9 +341,17 @@ export default function NewProduct() {
             autoComplete="off"
           >
             <div className="flex-col width-100 align-center align-start">
-              <span className="pointer">
-                {productFile?.name} {isImageUploading && <ProgressCircle />}
-              </span>
+              <div className="pointer flex-row align-center">
+                {productFile && (
+                  <img
+                    src={URL.createObjectURL(productFile)}
+                    alt=""
+                    className="product-image"
+                  />
+                )}{" "}
+                &nbsp; {isImageUploading && <ProgressCircle />}
+              </div>
+              &nbsp;
               <div className="flex-row align-center">
                 <span
                   className="pointer text-blue-default"
@@ -285,15 +364,15 @@ export default function NewProduct() {
           </Box>
           <br />
           <Button
-            onClick={(e) => {
-              console.log(product);
-            }}
+            onClick={CreateNewProduct}
             sx={{ height: "35px", width: "150px", fontSize: "12px" }}
             variant="contained"
             type="button"
+            disabled={isLoading || isImageUploading}
           >
-            Create
+            {isLoading || isImageUploading ? <ProgressCircle /> : "Create"}
           </Button>
+          <br />
         </>
       ) : (
         <MegaLoader />
