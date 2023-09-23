@@ -109,19 +109,7 @@ export default function Orders() {
         <>
           <div className="top width-100 flex-col">
             <div className="flex-row width-100 align-center justify-between">
-              <span className="text-dark fw-500 px-20">Products</span>
-              <Button
-                href="/dashboard/new-product"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/dashboard/new-product");
-                }}
-                sx={{ height: "35px", fontSize: "12px" }}
-                variant="contained"
-                type="button"
-              >
-                Add New
-              </Button>
+              <span className="text-dark fw-500 px-20">Orders</span>
             </div>
           </div>
           {isLoading ? (
