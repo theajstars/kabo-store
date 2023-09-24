@@ -38,12 +38,13 @@ export default function Orders() {
     const token = Cookies.get("token");
     setLoading(true);
     const r: GetProductsResponse = await PerformRequest({
-      route: Endpoints.GetProducts,
+      route: Endpoints.GetOrders,
       method: "POST",
-      data: { token: token },
+      data: { token: token, account: "panel" },
     }).catch(() => {
       setLoading(false);
     });
+    console.log(r);
     setLoading(false);
     if (r.data && r.data.data) {
       setProducts(r.data.data);

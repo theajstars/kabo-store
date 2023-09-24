@@ -41,6 +41,7 @@ export default function DashboardContainer() {
       method: "POST",
       data: { token: token },
     });
+    console.log(r);
     if (r.data && r.data.data) {
       setUser(r.data.data);
     } else {

@@ -152,7 +152,7 @@ export default function NewProduct() {
         route: Endpoints.CreateNewProduct,
       });
       if (r.data && r.data.status === "success") {
-        addToast("Store created successfully!", { appearance: "success" });
+        addToast(r.data.message, { appearance: "success" });
         ClearForm();
       } else {
         addToast("An error occurred", { appearance: "error" });
@@ -340,6 +340,7 @@ export default function NewProduct() {
             <TextField
               select
               label="Sub Category"
+              disabled={product.category?.length === 0}
               value={product.subCategory}
               onChange={(e) => {
                 setProduct({ ...product, subCategory: e.target.value });

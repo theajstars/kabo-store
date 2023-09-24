@@ -74,3 +74,51 @@ export interface Store {
     email: string;
   };
 }
+
+export interface Order {
+  payment_status: "Successful" | "Pending" | "Failed";
+  order_status: "Request" | "Delivery" | "Successful" | "Delivered";
+  payment_timestamp: string;
+  order_timestamp: string;
+  reference_code: string;
+  store: [
+    {
+      name: string;
+      email: string;
+      phone: string;
+      address: string;
+    }
+  ];
+  product: [
+    {
+      poid: string;
+      id: string;
+      name: string;
+      quantity: string;
+      amount: string;
+      vat: string;
+      details: string;
+    }
+  ];
+  customer: [
+    {
+      lastname: string;
+      othernames: string;
+      email: string;
+      phone: string;
+    }
+  ];
+  rider: {
+    fullname: string;
+    email: string;
+    phone: string;
+  };
+  shipping: [
+    {
+      address: string;
+      details: string;
+      deliveryTracking: null | string;
+    }
+  ];
+  amount: null | number;
+}
