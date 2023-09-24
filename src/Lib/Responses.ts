@@ -2,9 +2,11 @@ import { Category, Product, Store, SubCategory, User } from "./Types";
 
 type ResponseStatus = "success" | "failed";
 export interface DefaultResponse {
-  status: ResponseStatus;
-  response_code: number;
-  message: string;
+  data: {
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+  };
 }
 export interface LoginResponse {
   data: {

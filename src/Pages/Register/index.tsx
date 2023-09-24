@@ -17,28 +17,33 @@ import {
   FormControlLabel,
   Divider,
 } from "@mui/material";
-
+import { useToasts } from "react-toast-notifications";
 import { appConfig } from "../../Lib/appConfig";
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
-import { LoginResponse } from "../../Lib/Responses";
+import { DefaultResponse, LoginResponse } from "../../Lib/Responses";
+import { validateEmail } from "../../Lib/Methods";
+import { PerformRequest } from "../../Lib/PerformRequest";
+import { Endpoints } from "../../Lib/Endpoints";
+import ProgressCircle from "../../Misc/ProgressCircle";
 
+interface UserFormValuesProps {
+  email: string;
+  password: string;
+  phone: string;
+  username: string;
+  lastName: string;
+  firstName: string;
+  showPassword: boolean;
+}
+interface StoreFormValuesProps {
+  name: string;
+  email: string;
+  phone: string;
+}
 export default function Register() {
-  interface UserFormValuesProps {
-    email: string;
-    password: string;
-    phone: string;
-    username: string;
-    lastName: string;
-    firstName: string;
-    showPassword: boolean;
-  }
-  interface StoreFormValuesProps {
-    name: string;
-    email: string;
-    phone: string;
-  }
+  const { addToast, removeAllToasts } = useToasts();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [userFormValues, setUserFormValues] = useState<UserFormValuesProps>({
     email: "",
@@ -54,8 +59,66 @@ export default function Register() {
     phone: "",
     email: "",
   });
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    removeAllToasts();
     e.preventDefault();
+    console.log(userFormValues);
+    console.log(storeFormValues);
+    const {
+      email: userEmail,
+      password,
+      phone: userPhone,
+      username,
+      lastName,
+      firstName,
+    } = userFormValues;
+    const { name, phone: storePhone, email: storeEmail } = storeFormValues;
+    const isUserEmailValid = validateEmail(userEmail);
+    const isStoreEmailValid = validateEmail(storeEmail);
+
+    if (
+      password.length === 0 ||
+      userPhone.length !== 11 ||
+      username.length === 0 ||
+      lastName.length === 0 ||
+      firstName.length === 0 ||
+      name.length === 0 ||
+      storePhone.length !== 11 ||
+      !isUserEmailValid ||
+      !isStoreEmailValid
+    ) {
+      addToast("Please fill the form correctly!", { appearance: "error" });
+    } else {
+      setLoading(true);
+      const r: DefaultResponse = await PerformRequest({
+        method: "POST",
+        route: Endpoints.CreateStore,
+        data: {
+          name,
+          phone: storePhone,
+          email: storeEmail,
+          personal: {
+            lastname: lastName,
+            othernames: firstName,
+            username,
+            email: userEmail,
+            phone: userPhone,
+            passcode: password,
+          },
+        },
+      }).catch(() => {
+        setLoading(false);
+      });
+      setLoading(false);
+      if (r.data && r.data.status) {
+        const { status } = r.data;
+        if (status === "success") {
+          addToast("Store Created!", { appearance: "success" });
+        } else {
+          addToast(r.data.message, { appearance: "error" });
+        }
+      }
+    }
   };
 
   return (
@@ -225,12 +288,9 @@ export default function Register() {
               }}
               variant="contained"
               type="submit"
+              disabled={isLoading}
             >
-              {isLoading ? (
-                <CircularProgress color="inherit" />
-              ) : (
-                "Create Account"
-              )}
+              {isLoading ? <ProgressCircle /> : "Create Account"}
             </Button>
           </form>
           <br />

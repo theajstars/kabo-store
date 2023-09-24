@@ -159,6 +159,7 @@ export default function Login() {
                 fontSize: "15px",
                 textTransform: "capitalize",
               }}
+              disabled={isLoading}
               variant="contained"
               type="submit"
             >
