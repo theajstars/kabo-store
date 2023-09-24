@@ -154,7 +154,11 @@ export default function Login() {
             <Button
               fullWidth
               size="large"
-              sx={{ height: "35px" }}
+              sx={{
+                height: "35px",
+                fontSize: "15px",
+                textTransform: "capitalize",
+              }}
               variant="contained"
               type="submit"
             >
@@ -165,7 +169,7 @@ export default function Login() {
           <div className="flex-row align-center justify-between">
             <span className="px-14">Don't have an account?</span>
             <Link className="text-blue-default" to="/register">
-              Create an account
+              Register
             </Link>
           </div>
         </CardContent>

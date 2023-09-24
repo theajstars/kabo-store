@@ -3,7 +3,8 @@
 .register-container {
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 50px 0;
   .content {
     max-width: 500px;
     box-shadow: 0px 2px 10px 0px rgba(58, 53, 65, 0.1);
