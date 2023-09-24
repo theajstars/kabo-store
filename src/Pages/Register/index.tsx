@@ -2,27 +2,14 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Checkbox,
-  Button,
-  CircularProgress,
-  FormControlLabel,
-  Divider,
-} from "@mui/material";
+import { TextField, CardContent, Button, Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
-import { appConfig } from "../../Lib/appConfig";
+
 import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
-import { DefaultResponse, LoginResponse } from "../../Lib/Responses";
+import { DefaultResponse } from "../../Lib/Responses";
 import { validateEmail } from "../../Lib/Methods";
 import { PerformRequest } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
@@ -43,6 +30,7 @@ interface StoreFormValuesProps {
   phone: string;
 }
 export default function Register() {
+  const navigate = useNavigate();
   const { addToast, removeAllToasts } = useToasts();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [userFormValues, setUserFormValues] = useState<UserFormValuesProps>({
