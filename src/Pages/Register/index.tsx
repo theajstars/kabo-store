@@ -15,6 +15,7 @@ import {
   Button,
   CircularProgress,
   FormControlLabel,
+  Divider,
 } from "@mui/material";
 
 import { appConfig } from "../../Lib/appConfig";
@@ -24,16 +25,26 @@ import "./styles.scss";
 import { LoginResponse } from "../../Lib/Responses";
 
 export default function Register() {
-  interface FormValues {
+  interface UserFormValuesProps {
     email: string;
     password: string;
     showPassword: boolean;
   }
+  interface StoreFormValuesProps {
+    name: string;
+    email: string;
+    phone: string;
+  }
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [formValues, setFormValues] = useState<FormValues>({
+  const [userFormValues, setUserFormValues] = useState<UserFormValuesProps>({
     email: "",
     password: "",
     showPassword: false,
+  });
+  const [storeFormValues, setStoreFormValues] = useState<StoreFormValuesProps>({
+    name: "",
+    phone: "",
+    email: "",
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,65 +54,83 @@ export default function Register() {
     <div className="register-container flex-row width-100">
       <div className="content">
         <CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <div className="flex-row align-center justify-center width-100">
             <img src={Logo} alt="" className="logo" />
-          </Box>
-
-          <Box sx={{ mb: 6 }}>
-            <Typography
-              variant="h5"
-              sx={{ fontWeight: 600, marginBottom: 1.5 }}
-            >
-              Welcome to {appConfig.appName}!
-            </Typography>
-            <Typography variant="body2">
-              Please sign-in to your account and start the adventure
-            </Typography>
-          </Box>
+          </div>
 
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <span className="text-dark px-19 fw-600">Store Information</span>
+            <br />
+            <br />
             <TextField
               autoFocus
               fullWidth
-              id="email"
+              label="Name"
+              sx={{ marginBottom: 4 }}
+              value={storeFormValues.name}
+              onChange={(e) =>
+                setStoreFormValues({ ...storeFormValues, name: e.target.value })
+              }
+            />
+            <TextField
+              autoFocus
+              fullWidth
+              label="Phone Number"
+              sx={{ marginBottom: 4 }}
+              value={storeFormValues.phone}
+              onChange={(e) =>
+                setStoreFormValues({
+                  ...storeFormValues,
+                  phone: e.target.value,
+                })
+              }
+            />
+            <TextField
+              autoFocus
+              fullWidth
+              label="Email"
+              sx={{ marginBottom: 4 }}
+              value={storeFormValues.email}
+              onChange={(e) =>
+                setStoreFormValues({
+                  ...storeFormValues,
+                  email: e.target.value,
+                })
+              }
+            />
+            <Divider />
+            <br />
+            <span className="text-dark px-19 fw-600">User Information</span>
+            <br />
+            <br />
+
+            <TextField
+              autoFocus
+              fullWidth
               label="Email"
               type={"email"}
               sx={{ marginBottom: 4 }}
-              value={formValues.email}
+              value={userFormValues.email}
               onChange={(e) =>
-                setFormValues({ ...formValues, email: e.target.value })
+                setUserFormValues({ ...userFormValues, email: e.target.value })
               }
             />
             <FormControl fullWidth>
               <InputLabel htmlFor="auth-login-password">Password</InputLabel>
               <OutlinedInput
                 label="Password"
-                value={formValues.password}
-                id="auth-login-password"
+                value={userFormValues.password}
                 onChange={(e) =>
-                  setFormValues({ ...formValues, password: e.target.value })
+                  setUserFormValues({
+                    ...userFormValues,
+                    password: e.target.value,
+                  })
                 }
-                type={formValues.showPassword ? "text" : "password"}
+                type={userFormValues.showPassword ? "text" : "password"}
               />
             </FormControl>
-            <Box
-              sx={{
-                mb: 4,
-                display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-              }}
-            >
-              <FormControlLabel control={<Checkbox />} label="Remember Me" />
-            </Box>
-
+            <br />
+            <br />
             <Button fullWidth size="large" variant="contained" type="submit">
               {isLoading ? <CircularProgress color="inherit" /> : "Login"}
             </Button>
