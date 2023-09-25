@@ -14,8 +14,6 @@ import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
 import { PerformRequest } from "../../Lib/PerformRequest";
-import { Endpoints } from "../../Lib/Endpoints";
-import { GetUserStoreResponse, LoginResponse } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
 

@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import Cookies from "js-cookie";
 
-import { Product, User } from "../../Lib/Types";
+import { Order, Product, User } from "../../Lib/Types";
 
 import ProductsIcon from "../../Assets/IMG/ProductsIconDark.svg";
 import OrdersIcon from "../../Assets/IMG/OrdersIconDark.svg";
@@ -15,7 +15,7 @@ import Logo from "../../Assets/IMG/Logo.png";
 import "./styles.scss";
 import { PerformRequest } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
-import { GetProductsResponse, LoginResponse } from "../../Lib/Responses";
+import { GetOrdersResponse, LoginResponse } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
 import { DataGrid } from "@mui/x-data-grid";
@@ -29,15 +29,15 @@ export default function Orders() {
   const { addToast, removeAllToasts } = useToasts();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   // Product Search Params Begin
   const [page, setPage] = useState<string>("");
   // Product Search Params End
-  const getProducts = async () => {
+  const getOrders = async () => {
     const token = Cookies.get("token");
     setLoading(true);
-    const r: GetProductsResponse = await PerformRequest({
+    const r: GetOrdersResponse = await PerformRequest({
       route: Endpoints.GetOrders,
       method: "POST",
       data: { token: token, account: "panel" },
@@ -47,58 +47,73 @@ export default function Orders() {
     console.log(r);
     setLoading(false);
     if (r.data && r.data.data) {
-      setProducts(r.data.data);
+      setOrders(r.data.data);
     }
   };
   useEffect(() => {
-    getProducts();
+    getOrders();
   }, []);
 
   const tableColProps: GridColTypeDef = {
     flex: 1,
   };
-  const tableColumns: GridColDef<Product>[] = [
+  const tableColumns: GridColDef<Order>[] = [
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Store Name",
       // ...tableColProps,
-      width: 220,
+      width: 150,
+      renderCell: (param) => {
+        return <span>{param.row.store[0]?.name ?? ""}</span>;
+      },
     },
 
     {
-      field: "amount",
-      headerName: "Amount",
+      field: "order_timestamp",
+      headerName: "Order Time",
       ...tableColProps,
     },
     {
-      field: "quantity",
-      headerName: "Quantity",
+      field: "payment_timestamp",
+      headerName: "Payment Time",
       ...tableColProps,
     },
     {
-      field: "category_name",
-      headerName: "Categrory",
-      ...tableColProps,
-    },
-    {
-      field: "store_name",
-      headerName: "Store",
-      ...tableColProps,
-    },
-    {
-      field: "active",
-      headerName: "Status",
+      field: "order_status",
+      headerName: "Order Status",
       ...tableColProps,
       renderCell: (params) => {
         return (
           <span
             className={
-              params.row.active === "Yes"
+              ["Successful", "Delivered"].includes(params.row.order_status)
                 ? "text-green-primary"
+                : ["Delivery", "Request"].includes(params.row.order_status)
+                ? "text-blue-default"
                 : "text-red-primary"
             }
           >
-            {params.row.active === "Yes" ? "Active" : "Inactive"}
+            {params.row.order_status}
+          </span>
+        );
+      },
+    },
+    {
+      field: "payment_status",
+      headerName: "Payment Status",
+      ...tableColProps,
+      renderCell: (params) => {
+        return (
+          <span
+            className={
+              params.row.payment_status === "Successful"
+                ? "text-green-primary"
+                : params.row.payment_status === "Pending"
+                ? "text-orange-primary"
+                : "text-red-primary"
+            }
+          >
+            {params.row.payment_status}
           </span>
         );
       },
@@ -120,8 +135,8 @@ export default function Orders() {
               loading={isLoading}
               className="table"
               columns={tableColumns}
-              rows={products}
-              getRowId={(row) => row.id}
+              rows={orders}
+              getRowId={(row) => row.reference_code}
             />
           )}
         </>
