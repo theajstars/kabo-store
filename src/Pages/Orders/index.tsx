@@ -31,16 +31,25 @@ export default function Orders() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  // Product Search Params Begin
-  const [page, setPage] = useState<string>("");
-  // Product Search Params End
+  // Order Search Params Begin
+  const [rowCount, setRowCount] = useState<number>(0);
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 10,
+    page: 0,
+  });
+  // Order Search Params End
   const getOrders = async () => {
     const token = Cookies.get("token");
     setLoading(true);
     const r: GetOrdersResponse = await PerformRequest({
       route: Endpoints.GetOrders,
       method: "POST",
-      data: { token: token, account: "panel" },
+      data: {
+        token: token,
+        account: "panel",
+        page: paginationModel.page,
+        limit: paginationModel.pageSize,
+      },
     }).catch(() => {
       setLoading(false);
     });
@@ -48,11 +57,12 @@ export default function Orders() {
     setLoading(false);
     if (r.data && r.data.data) {
       setOrders(r.data.data);
+      setRowCount(r.data.counts);
     }
   };
   useEffect(() => {
     getOrders();
-  }, []);
+  }, [paginationModel]);
 
   const tableColProps: GridColTypeDef = {
     flex: 1,
@@ -137,6 +147,10 @@ export default function Orders() {
               columns={tableColumns}
               rows={orders}
               getRowId={(row) => row.reference_code}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              pageSizeOptions={[5, 10, 25]}
+              rowCount={rowCount}
             />
           )}
         </>

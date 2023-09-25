@@ -60,7 +60,6 @@ export default function Products() {
     }
   };
   useEffect(() => {
-    console.log("This sum bs: ", paginationModel);
     getProducts();
   }, [paginationModel]);
 
