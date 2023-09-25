@@ -3,7 +3,8 @@
 .dashboard-container {
   align-items: center;
   justify-content: center;
-
+  box-sizing: border-box;
+  padding: 0 20px;
   .logo {
     height: 100px;
   }

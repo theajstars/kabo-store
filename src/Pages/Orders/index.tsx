@@ -130,7 +130,7 @@ export default function Orders() {
     },
   ];
   return (
-    <div className="products-container flex-col width-100">
+    <div className="orders-container flex-col width-100">
       {userContext?.user ? (
         <>
           <div className="top width-100 flex-col">
