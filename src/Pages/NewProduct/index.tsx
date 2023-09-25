@@ -28,7 +28,7 @@ interface NewProductProps {
   amount?: number;
   quantity?: number;
   weight?: number;
-  store?: string;
+
   category?: string;
   subCategory?: string;
   details?: string;
@@ -47,7 +47,7 @@ export default function NewProduct() {
 
   const [product, setProduct] = useState<NewProductProps>({
     name: "",
-    store: "",
+
     category: "",
     subCategory: "",
     main_photo: "",
@@ -55,16 +55,7 @@ export default function NewProduct() {
   const [productFile, setProductFile] = useState<File>();
   const [isImageUploading, setImageUploading] = useState<boolean>(false);
   const token = Cookies.get("token");
-  const getStoreList = async () => {
-    const r: GetStoreListResponse = await PerformRequest({
-      route: Endpoints.GetStoreList,
-      method: "POST",
-      data: { token },
-    });
-    if (r.data && r.data.data) {
-      setStoreList(r.data.data);
-    }
-  };
+
   const getCategories = async () => {
     const r: GetCategoriesResponse = await PerformRequest({
       route: Endpoints.GetProductCategory,
@@ -86,7 +77,6 @@ export default function NewProduct() {
     }
   };
   useEffect(() => {
-    getStoreList();
     getCategories();
   }, []);
 
@@ -99,7 +89,6 @@ export default function NewProduct() {
       quantity: 0,
       weight: 0,
       details: "",
-      store: "",
       category: "",
       subCategory: "",
       main_photo: "",
@@ -109,7 +98,6 @@ export default function NewProduct() {
   const CreateNewProduct = async () => {
     const {
       name,
-      store,
       category,
       subCategory,
       main_photo,
@@ -120,7 +108,6 @@ export default function NewProduct() {
     } = product;
     if (
       name.length === 0 ||
-      store?.length === 0 ||
       category?.length === 0 ||
       subCategory?.length === 0 ||
       main_photo?.length === 0 ||
@@ -135,7 +122,7 @@ export default function NewProduct() {
     } else {
       const data = {
         token: token,
-        store_id: store,
+        store_id: userContext?.store?.store_id,
         name,
         quantity,
         amount,
@@ -277,21 +264,16 @@ export default function NewProduct() {
           </Box>
           <TextField
             select
+            disabled
             label="Store"
             sx={{
               width: "51.5ch",
             }}
-            value={product.store}
-            onChange={(e) => {
-              setProduct({ ...product, store: e.target.value });
-              console.log(e.target.value);
-            }}
+            value={userContext.store?.store_id}
           >
-            {storeList.map((store) => (
-              <MenuItem key={store.store_id} value={store.store_id}>
-                {store.name}
-              </MenuItem>
-            ))}
+            <MenuItem value={userContext.store?.store_id}>
+              {userContext.store?.name}
+            </MenuItem>
           </TextField>
           <TextField
             spellCheck={false}

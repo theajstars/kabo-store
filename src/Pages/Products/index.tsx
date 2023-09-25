@@ -46,6 +46,7 @@ export default function Products() {
       method: "POST",
       data: {
         token: token,
+        store: Cookies.get("user_store_id"),
         page: paginationModel.page,
         limit: paginationModel.pageSize,
       },
