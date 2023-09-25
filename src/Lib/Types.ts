@@ -136,3 +136,36 @@ export interface Order {
   ];
   amount: null | number;
 }
+
+export interface TeamMember {
+  team_id: string;
+  store_id: string;
+  fullname: string;
+  email: string;
+  role: "admin" | "rider" | "owner";
+  priviledge: "Yes" | "No";
+  username: string;
+  lastname: string;
+  othernames: string;
+  phone: string;
+  active: "Yes" | "No";
+  photo: string;
+  address: string;
+  dob: string;
+  gender: string;
+  nin: string;
+  bvn: string;
+  valid_license: string;
+  bank_details: {
+    account_no: string;
+    bank_name: string;
+    account_name: string;
+  };
+  next_of_kin: {
+    nok_lastname: string;
+    nok_othernames: string;
+    nok_address: string;
+    nok_phone: string;
+    nok_valid_license: string;
+  };
+}

@@ -1,4 +1,12 @@
-import { Category, Order, Product, Store, SubCategory, User } from "./Types";
+import {
+  Category,
+  Order,
+  Product,
+  Store,
+  SubCategory,
+  TeamMember,
+  User,
+} from "./Types";
 
 type ResponseStatus = "success" | "failed";
 export interface DefaultResponse {
@@ -92,6 +100,18 @@ export interface GetOrdersResponse {
     message: string;
     data: Order[];
     volume: number;
+    counts: number;
+    totalPages: number;
+    currentPage: number;
+    listPerPage: number;
+  };
+}
+export interface GetTeamResponse {
+  data: {
+    status: ResponseStatus;
+    response_code: number;
+    message: string;
+    data: TeamMember[];
     counts: number;
     totalPages: number;
     currentPage: number;
