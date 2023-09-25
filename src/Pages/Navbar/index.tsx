@@ -23,6 +23,9 @@ export default function Navbar() {
         <Link className="item text-blue-default" to="/dashboard/orders">
           Orders
         </Link>
+        <Link className="item text-blue-default" to="/dashboard/team">
+          Team
+        </Link>
       </div>
       <span
         className="flex-row align-center text-blue-default pointer"

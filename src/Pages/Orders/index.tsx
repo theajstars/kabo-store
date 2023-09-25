@@ -5,18 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import Cookies from "js-cookie";
 
-import {
-  Order,
-  OrderStatus,
-  PaymentStatus,
-  Product,
-  User,
-} from "../../Lib/Types";
-
-import ProductsIcon from "../../Assets/IMG/ProductsIconDark.svg";
-import OrdersIcon from "../../Assets/IMG/OrdersIconDark.svg";
-
-import Logo from "../../Assets/IMG/Logo.png";
+import { Order, OrderStatus, PaymentStatus, User } from "../../Lib/Types";
 
 import "./styles.scss";
 import { PerformRequest } from "../../Lib/PerformRequest";
@@ -31,10 +20,7 @@ import ProgressCircle from "../../Misc/ProgressCircle";
 import { OrderStatuses, PaymentStatuses } from "../../Lib/appConfig";
 
 export default function Orders() {
-  const navigate = useNavigate();
   const userContext = useContext(AppContext);
-  const { addToast, removeAllToasts } = useToasts();
-  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [orders, setOrders] = useState<Order[]>([]);
 
