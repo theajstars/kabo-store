@@ -4,6 +4,7 @@ const Endpoints = {
 
   CreateStore: "/store/create",
   GetStoreList: "/store/list",
+  GetUserStore: "/store/details",
 
   GetProducts: "/store/products",
   CreateNewProduct: "/store/add-product",

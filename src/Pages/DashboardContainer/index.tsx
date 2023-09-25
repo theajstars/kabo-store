@@ -48,12 +48,23 @@ export default function DashboardContainer() {
       navigate("/login");
     }
   };
+  const getUserStore = async () => {
+    const token = Cookies.get("token");
+    const r = await PerformRequest({
+      method: "POST",
+      route: Endpoints.GetUserStore,
+      data: { token },
+    });
+    console.log(r);
+  };
   useEffect(() => {
     getUser();
+    getUserStore();
   }, []);
 
   const logout = () => {
     Cookies.remove("token");
+    Cookies.remove("user_store_id");
     navigate("/login");
   };
   return (

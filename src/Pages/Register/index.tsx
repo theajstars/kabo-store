@@ -102,6 +102,7 @@ export default function Register() {
         const { status } = r.data;
         if (status === "success") {
           addToast("Store Created!", { appearance: "success" });
+          navigate("/login");
         } else {
           addToast(r.data.message, { appearance: "error" });
         }
