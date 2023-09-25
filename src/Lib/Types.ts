@@ -79,9 +79,19 @@ export interface Store {
   store_id: string;
 }
 
+export type OrderStatus =
+  | "Pending"
+  | "Successful"
+  | "Failed"
+  | "Delivery"
+  | "Refund"
+  | "Delivered"
+  | "";
+
+export type PaymentStatus = "Successful" | "Pending" | "Failed" | "";
 export interface Order {
-  payment_status: "Successful" | "Pending" | "Failed";
-  order_status: "Request" | "Delivery" | "Successful" | "Delivered";
+  payment_status: PaymentStatus;
+  order_status: OrderStatus;
   payment_timestamp: string;
   order_timestamp: string;
   reference_code: string;
