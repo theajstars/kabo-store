@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 
@@ -17,46 +17,18 @@ import { PerformRequest } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
 import { GetUserStoreResponse, LoginResponse } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
+import { AppContext } from "../DashboardContainer";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { addToast, removeAllToasts } = useToasts();
-  const [user, setUser] = useState<User | null>(null);
-  const [userStore, setUserStore] = useState<Store | null>(null);
-
-  const getUser = async () => {
-    const token = Cookies.get("token");
-    const r: LoginResponse = await PerformRequest({
-      route: Endpoints.GetUserDetails,
-      method: "POST",
-      data: { token: token },
-    });
-    if (r.data && r.data.data) {
-      setUser(r.data.data);
-      const r2: GetUserStoreResponse = await PerformRequest({
-        route: Endpoints.GetUserStore,
-        method: "POST",
-        data: {
-          token,
-          store_id: Cookies.get("user_store_id"),
-        },
-      });
-      if (r2.data && r2.data.data) {
-        if (r2.data.status === "success") {
-          setUserStore(r2.data.data);
-        }
-      }
-    } else {
-      navigate("/login");
-    }
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
+  const userContext = useContext(AppContext);
+  const user = userContext?.user;
+  const userStore = userContext?.store;
 
   return (
     <div className="dashboard-container flex-col width-100">
-      {user ? (
+      {userContext?.user ? (
         <>
           <img src={Logo} alt="" className="logo" />
           <div className="profile flex-row align-center width-100 text-dark">
@@ -65,7 +37,7 @@ export default function Dashboard() {
                 <i className="far fa-user" />
               </span>
               <span className="tag px-14">
-                {user.lastname} {user.othernames}
+                {user?.lastname} {user?.othernames}
               </span>
             </div>
             <div className="item flex-row align-center">
