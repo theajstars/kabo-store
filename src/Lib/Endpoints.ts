@@ -14,6 +14,9 @@ const Endpoints = {
 
   GetOrders: "/order/details",
 
+  AddTeamMember: "/store/add-teams",
+  GetTeam: "/store/teams",
+
   UploadFile: "/misc/file-upload",
 };
 export { Endpoints };

@@ -6,6 +6,7 @@ import Logo from "../../Assets/IMG/Logo.png";
 
 import "./styles.scss";
 import { AppContext } from "../DashboardContainer";
+import { RouteList } from "../../Lib/Routelist";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -17,15 +18,16 @@ export default function Navbar() {
         <Link to="/dashboard">
           <img src={Logo} alt="" />
         </Link>
-        <Link className="item text-blue-default" to="/dashboard/products">
-          Products
-        </Link>
-        <Link className="item text-blue-default" to="/dashboard/orders">
-          Orders
-        </Link>
-        <Link className="item text-blue-default" to="/dashboard/team">
-          Team
-        </Link>
+        {RouteList.map((route) => {
+          return (
+            <Link
+              className="item text-blue-default"
+              to={`/dashboard/${route.route}`}
+            >
+              {route.label}
+            </Link>
+          );
+        })}
       </div>
       <span
         className="flex-row align-center text-blue-default pointer"

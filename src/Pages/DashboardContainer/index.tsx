@@ -23,6 +23,7 @@ import Dashboard from "../Dashboard";
 import Navbar from "../Navbar";
 import NewProduct from "../NewProduct";
 import Orders from "../Orders";
+import Team from "../Team";
 
 interface AppContextProps {
   user: User | null;
@@ -84,6 +85,7 @@ export default function DashboardContainer() {
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/team" element={<Team />} />
         <Route path="/new-product" element={<NewProduct />} />
       </Routes>
     </AppContext.Provider>
