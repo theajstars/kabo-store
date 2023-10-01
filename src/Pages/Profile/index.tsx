@@ -23,6 +23,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { GridColDef, GridColTypeDef } from "@mui/x-data-grid/models";
 import { Button } from "@mui/material";
 import ProgressCircle from "../../Misc/ProgressCircle";
+import { validateEmail } from "../../Lib/Methods";
 
 interface ProfileFormProps {
   name: string;
@@ -48,27 +49,66 @@ export default function Profile() {
     logo: "",
   });
   const SubmitProfile = async () => {
-    const token = Cookies.get("token");
-    setLoading(true);
-    const r: GetProductsResponse = await PerformRequest({
-      route: Endpoints.UpdateAccount,
-      method: "POST",
-      data: {
-        token: token,
-        store: Cookies.get("user_store_id"),
-      },
-    }).catch(() => {
+    console.log(profileForm);
+    removeAllToasts();
+    const { name, address, email, phone, description } = profileForm;
+    const isEmailValid = validateEmail(email);
+    if (
+      name.length === 0 ||
+      address.length === 0 ||
+      phone.length !== 11 ||
+      !isEmailValid
+    ) {
+      addToast("Please fill the form correctly!", { appearance: "error" });
+    } else {
+      const token = Cookies.get("token");
+      setLoading(true);
+      const r: GetProductsResponse = await PerformRequest({
+        route: Endpoints.UpdateAccount,
+        method: "POST",
+        data: {
+          token: token,
+          data: {
+            token,
+            email,
+            name,
+            address,
+            description,
+            store_id: Cookies.get("user_store_id"),
+          },
+        },
+      }).catch(() => {
+        setLoading(false);
+      });
       setLoading(false);
-    });
-    setLoading(false);
-    if (userContext) {
-      userContext?.getUser();
+      if (userContext) {
+        userContext?.getUser();
+      }
     }
   };
+
+  useEffect(() => {
+    if (userContext) {
+      if (userContext.store) {
+        const { store } = userContext;
+        setProfileForm({
+          name: store.name,
+          email: store.email,
+          address: store.address,
+          description: store.description,
+          phone: store.phone,
+          logo: store.photo,
+        });
+      }
+    }
+  }, [userContext]);
 
   const textFieldProps: TextFieldProps = {
     variant: "outlined",
     size: "small",
+    sx: {
+      mt: "30px",
+    },
   };
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -89,7 +129,6 @@ export default function Profile() {
         setProfileForm({ ...profileForm, description: value });
         break;
     }
-    setProfileForm({ ...profileForm, name: value });
   };
   return (
     <Container maxWidth="lg">
@@ -112,6 +151,7 @@ export default function Profile() {
                     name="name"
                     value={profileForm.name}
                     placeholder="Store Name"
+                    label="Store Name"
                     onChange={handleFormChange}
                     {...textFieldProps}
                     fullWidth
@@ -122,6 +162,7 @@ export default function Profile() {
                     name="phone"
                     value={profileForm.phone}
                     placeholder="Phone"
+                    label="Phone"
                     onChange={handleFormChange}
                     {...textFieldProps}
                     fullWidth
@@ -131,6 +172,7 @@ export default function Profile() {
                     name="email"
                     value={profileForm.email}
                     placeholder="Email Address"
+                    label="Email Address"
                     onChange={handleFormChange}
                     {...textFieldProps}
                     fullWidth
@@ -141,6 +183,7 @@ export default function Profile() {
                     name="address"
                     value={profileForm.address}
                     placeholder="Store Address"
+                    label="Store Address"
                     onChange={handleFormChange}
                     {...textFieldProps}
                     fullWidth
@@ -151,13 +194,12 @@ export default function Profile() {
                     name="description"
                     value={profileForm.description}
                     placeholder="Description"
+                    label="Description"
                     onChange={handleFormChange}
                     {...textFieldProps}
                     fullWidth
                   />
                 </div>
-                <br />
-                <br />
                 <br />
                 <Button
                   onClick={(e) => {

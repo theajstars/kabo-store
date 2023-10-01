@@ -58,25 +58,16 @@ export interface Product {
   store_name: string;
 }
 export interface Store {
-  address: string;
-  bankDetails: {
-    account_no: string;
-    bank_code: string;
-    bank_name: string;
-  };
-  description: string;
-  email: string;
-  logo: string;
-  metrics: {
-    total_active_products: number;
-    total_inactive_products: number;
-    successful_orders: number;
-    pending_orders: number;
-    failed_orders: number;
-  };
-  name: string;
-  phone: string;
   store_id: string;
+  name: string;
+  email: string;
+  phone: string;
+  description: string;
+  photo: string;
+  address: string;
+  area: string;
+  city: string;
+  state: string;
 }
 
 export type OrderStatus =

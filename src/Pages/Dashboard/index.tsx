@@ -35,7 +35,8 @@ export default function Dashboard() {
                 <i className="far fa-user" />
               </span>
               <span className="tag px-14">
-                {user?.lastname} {user?.othernames}
+                {user?.othernames}&nbsp;
+                {user?.lastname}
               </span>
             </div>
             <div className="item flex-row align-center">
