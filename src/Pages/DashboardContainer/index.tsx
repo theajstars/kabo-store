@@ -24,6 +24,7 @@ import Navbar from "../Navbar";
 import NewProduct from "../NewProduct";
 import Orders from "../Orders";
 import Team from "../Team";
+import Profile from "../Profile";
 
 interface AppContextProps {
   user: User | null;
@@ -86,6 +87,7 @@ export default function DashboardContainer() {
         <Route path="/products" element={<Products />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/new-product" element={<NewProduct />} />
       </Routes>
     </AppContext.Provider>

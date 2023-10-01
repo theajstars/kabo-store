@@ -11,6 +11,7 @@ import DashboardContainer from "./Pages/DashboardContainer";
 import NewProduct from "./Pages/NewProduct";
 import Orders from "./Pages/Orders";
 import Team from "./Pages/Team";
+import Profile from "./Pages/Profile";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/dashboard/products" element={<Products />} />
             <Route path="/dashboard/orders" element={<Orders />} />
             <Route path="/dashboard/team" element={<Team />} />
+            <Route path="/dashboard/profile" element={<Profile />} />
             <Route path="/dashboard/new-product" element={<NewProduct />} />
           </Route>
         </Routes>
