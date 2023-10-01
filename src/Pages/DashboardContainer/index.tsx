@@ -30,6 +30,7 @@ interface AppContextProps {
   user: User | null;
   store: Store | null;
   logout: () => void;
+  getUser: () => void;
 }
 const AppContext = createContext<AppContextProps | null>(null);
 export default function DashboardContainer() {
@@ -79,7 +80,7 @@ export default function DashboardContainer() {
   };
   return (
     <AppContext.Provider
-      value={{ user: user, logout: logout, store: userStore }}
+      value={{ user: user, logout: logout, store: userStore, getUser: getUser }}
     >
       <Navbar />
       <Routes>

@@ -18,5 +18,7 @@ const Endpoints = {
   GetTeam: "/store/teams",
 
   UploadFile: "/misc/file-upload",
+
+  UpdateAccount: "/store/update-account",
 };
 export { Endpoints };

@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { useToasts } from "react-toast-notifications";
 import Cookies from "js-cookie";
+import { Container, TextField, TextFieldProps } from "@mui/material";
 
 import { Product, User } from "../../Lib/Types";
 
@@ -23,136 +24,158 @@ import { GridColDef, GridColTypeDef } from "@mui/x-data-grid/models";
 import { Button } from "@mui/material";
 import ProgressCircle from "../../Misc/ProgressCircle";
 
+interface ProfileFormProps {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  description: string;
+  logo: string;
+}
 export default function Profile() {
   const navigate = useNavigate();
   const userContext = useContext(AppContext);
   const { addToast, removeAllToasts } = useToasts();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [products, setProducts] = useState<Product[]>([]);
 
-  // Product Search Params Begin
-  const [rowCount, setRowCount] = useState<number>(0);
-  const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: 10,
-    page: 0,
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const [profileForm, setProfileForm] = useState<ProfileFormProps>({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    description: "",
+    logo: "",
   });
-  // Product Search Params End
-  const getProducts = async () => {
+  const SubmitProfile = async () => {
     const token = Cookies.get("token");
     setLoading(true);
     const r: GetProductsResponse = await PerformRequest({
-      route: Endpoints.GetProducts,
+      route: Endpoints.UpdateAccount,
       method: "POST",
       data: {
         token: token,
         store: Cookies.get("user_store_id"),
-        page: paginationModel.page,
-        limit: paginationModel.pageSize,
       },
     }).catch(() => {
       setLoading(false);
     });
     setLoading(false);
-    if (r.data && r.data.data) {
-      setProducts(r.data.data);
-      setRowCount(r.data.counts);
+    if (userContext) {
+      userContext?.getUser();
     }
   };
-  useEffect(() => {
-    getProducts();
-  }, [paginationModel]);
 
-  const tableColProps: GridColTypeDef = {
-    flex: 1,
+  const textFieldProps: TextFieldProps = {
+    variant: "outlined",
+    size: "small",
   };
-  const tableColumns: GridColDef<Product>[] = [
-    {
-      field: "name",
-      headerName: "Name",
-      // ...tableColProps,
-      width: 220,
-    },
-
-    {
-      field: "amount",
-      headerName: "Amount",
-      ...tableColProps,
-    },
-    {
-      field: "quantity",
-      headerName: "Quantity",
-      ...tableColProps,
-    },
-    {
-      field: "category_name",
-      headerName: "Categrory",
-      ...tableColProps,
-    },
-    {
-      field: "store_name",
-      headerName: "Store",
-      ...tableColProps,
-    },
-    {
-      field: "active",
-      headerName: "Status",
-      ...tableColProps,
-      renderCell: (params) => {
-        return (
-          <span
-            className={
-              params.row.active === "Yes"
-                ? "text-green-primary"
-                : "text-red-primary"
-            }
-          >
-            {params.row.active === "Yes" ? "Active" : "Inactive"}
-          </span>
-        );
-      },
-    },
-  ];
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "name":
+        setProfileForm({ ...profileForm, name: value });
+        break;
+      case "address":
+        setProfileForm({ ...profileForm, address: value });
+        break;
+      case "phone":
+        setProfileForm({ ...profileForm, phone: value });
+        break;
+      case "email":
+        setProfileForm({ ...profileForm, email: value });
+        break;
+      case "description":
+        setProfileForm({ ...profileForm, description: value });
+        break;
+    }
+    setProfileForm({ ...profileForm, name: value });
+  };
   return (
-    <div className="products-container flex-col width-100">
-      {userContext?.user ? (
-        <>
-          <div className="top width-100 flex-col">
-            <div className="flex-row width-100 align-center justify-between">
-              <span className="text-dark fw-500 px-20">Products</span>
-              <Button
-                href="/dashboard/new-product"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/dashboard/new-product");
-                }}
-                sx={{ height: "35px", fontSize: "12px" }}
-                variant="contained"
-                type="button"
-              >
-                Add New
-              </Button>
+    <Container maxWidth="lg">
+      <div className="profile-container flex-col width-100">
+        {userContext?.user ? (
+          <>
+            <div className="top width-100 flex-col">
+              <div className="flex-row width-100 align-center justify-between">
+                <span className="text-dark fw-500 px-20">
+                  Profile Information
+                </span>
+              </div>
             </div>
-          </div>
-          {isLoading ? (
-            <ProgressCircle />
-          ) : (
-            <DataGrid
-              loading={isLoading}
-              className="table"
-              columns={tableColumns}
-              rows={products}
-              getRowId={(row) => row.id}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              pageSizeOptions={[5, 10, 25]}
-              rowCount={rowCount}
-            />
-          )}
-        </>
-      ) : (
-        <MegaLoader />
-      )}
-    </div>
+            {isLoading ? (
+              <ProgressCircle />
+            ) : (
+              <div className="profile flex-col width-100">
+                <div className="flex-row align-center width-10 justify-between profile-row">
+                  <TextField
+                    name="name"
+                    value={profileForm.name}
+                    placeholder="Store Name"
+                    onChange={handleFormChange}
+                    {...textFieldProps}
+                    fullWidth
+                  />
+                </div>
+                <div className="flex-row align-center width-10 justify-between profile-row">
+                  <TextField
+                    name="phone"
+                    value={profileForm.phone}
+                    placeholder="Phone"
+                    onChange={handleFormChange}
+                    {...textFieldProps}
+                    fullWidth
+                  />
+                  &nbsp; &nbsp; &nbsp; &nbsp;
+                  <TextField
+                    name="email"
+                    value={profileForm.email}
+                    placeholder="Email Address"
+                    onChange={handleFormChange}
+                    {...textFieldProps}
+                    fullWidth
+                  />
+                </div>
+                <div className="flex-row align-center width-10 justify-between profile-row">
+                  <TextField
+                    name="address"
+                    value={profileForm.address}
+                    placeholder="Store Address"
+                    onChange={handleFormChange}
+                    {...textFieldProps}
+                    fullWidth
+                  />
+                </div>
+                <div className="flex-row align-center width-10 justify-between profile-row">
+                  <TextField
+                    name="description"
+                    value={profileForm.description}
+                    placeholder="Description"
+                    onChange={handleFormChange}
+                    {...textFieldProps}
+                    fullWidth
+                  />
+                </div>
+                <br />
+                <br />
+                <br />
+                <Button
+                  onClick={(e) => {
+                    SubmitProfile();
+                  }}
+                  sx={{ height: "35px", fontSize: "12px" }}
+                  variant="contained"
+                  type="button"
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <MegaLoader />
+        )}
+      </div>
+    </Container>
   );
 }
