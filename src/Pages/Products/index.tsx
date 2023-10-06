@@ -4,6 +4,9 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { useToasts } from "react-toast-notifications";
 import Cookies from "js-cookie";
+import { DataGrid } from "@mui/x-data-grid";
+import { GridColDef, GridColTypeDef } from "@mui/x-data-grid/models";
+import { Button, Modal, Grid } from "@mui/material";
 
 import { Product, User } from "../../Lib/Types";
 
@@ -18,10 +21,8 @@ import { Endpoints } from "../../Lib/Endpoints";
 import { GetProductsResponse, LoginResponse } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
-import { DataGrid } from "@mui/x-data-grid";
-import { GridColDef, GridColTypeDef } from "@mui/x-data-grid/models";
-import { Button } from "@mui/material";
 import ProgressCircle from "../../Misc/ProgressCircle";
+import { getFinancialValueFromNumeric } from "../../Lib/Methods";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -29,7 +30,10 @@ export default function Products() {
   const { addToast, removeAllToasts } = useToasts();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [isProductModalVisible, setProductModalVisible] =
+    useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
 
   // Product Search Params Begin
   const [rowCount, setRowCount] = useState<number>(0);
@@ -46,7 +50,7 @@ export default function Products() {
       method: "POST",
       data: {
         token: token,
-        store: Cookies.get("user_store_id"),
+        store_id: Cookies.get("user_store_id"),
         page: paginationModel.page,
         limit: paginationModel.pageSize,
       },
@@ -72,6 +76,19 @@ export default function Products() {
       headerName: "Name",
       // ...tableColProps,
       width: 220,
+      renderCell: (params) => {
+        return (
+          <span
+            className="pointer"
+            onClick={() => {
+              setCurrentProduct(params.row);
+              setProductModalVisible(true);
+            }}
+          >
+            {params.row.name}
+          </span>
+        );
+      },
     },
 
     {
@@ -137,17 +154,60 @@ export default function Products() {
           {isLoading ? (
             <ProgressCircle />
           ) : (
-            <DataGrid
-              loading={isLoading}
-              className="table"
-              columns={tableColumns}
-              rows={products}
-              getRowId={(row) => row.id}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              pageSizeOptions={[5, 10, 25]}
-              rowCount={rowCount}
-            />
+            <>
+              <DataGrid
+                loading={isLoading}
+                className="table"
+                columns={tableColumns}
+                rows={products}
+                getRowId={(row) => row.id}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                pageSizeOptions={[5, 10, 25]}
+                rowCount={rowCount}
+              />
+              <Modal
+                open={isProductModalVisible}
+                onClose={() => {
+                  setCurrentProduct(null);
+                  setProductModalVisible(false);
+                }}
+              >
+                <div className="product-modal flex-col">
+                  {currentProduct && (
+                    <>
+                      <div className="flex-row width-100 align-center justify-between">
+                        <span className="text-blue-default pointer px-15">
+                          Close
+                        </span>
+                        <span className="flex-row align-center text-blue-default pointer px-15">
+                          Edit &nbsp; <i className="far fa-pencil px-13" />
+                        </span>
+                      </div>
+                      <img
+                        src={currentProduct.main_photo}
+                        alt=""
+                        className="image"
+                      />
+                      <span className="px-16 fw-500 text-dark">
+                        {currentProduct.name}
+                      </span>
+                      <span className="px-20 fw-600 text-dark">
+                        ₦{getFinancialValueFromNumeric(currentProduct.amount)}
+                      </span>
+                      <span className="px-14 text-dark-secondary">
+                        {currentProduct.details}
+                      </span>
+                      <Grid
+                        container
+                        spacing={2}
+                        justifyContent="space-between"
+                      ></Grid>
+                    </>
+                  )}
+                </div>
+              </Modal>
+            </>
           )}
         </>
       ) : (

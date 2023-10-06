@@ -183,8 +183,9 @@ export default function Login() {
           </div>
         </CardContent>
       </div>
-      <Link className="text-blue-default" to="/register">
-        Register
+      <br />
+      <Link className="text-blue-default" to="/reset">
+        Forgot Password?
       </Link>
     </div>
   );
