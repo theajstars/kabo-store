@@ -12,6 +12,8 @@ import NewProduct from "./Pages/NewProduct";
 import Orders from "./Pages/Orders";
 import Team from "./Pages/Team";
 import Profile from "./Pages/Profile";
+import ResetPassword from "./Pages/ResetPassword";
+import Error404 from "./Pages/Error404";
 
 function App() {
   return (
@@ -19,8 +21,10 @@ function App() {
       <Router>
         <Routes>
           <Route index element={<Login />} />
+          <Route path="*" element={<Error404 />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset" element={<ResetPassword />} />
           <Route path="/dashboard" element={<DashboardContainer />}>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard/products" element={<Products />} />

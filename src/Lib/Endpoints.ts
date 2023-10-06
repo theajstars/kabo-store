@@ -1,6 +1,7 @@
 const Endpoints = {
   LoginUser: "/account/login",
   GetUserDetails: "/account/details",
+  RecoverAccount: "/account/recover-account",
 
   CreateStore: "/store/create",
   GetStoreList: "/store/list",
