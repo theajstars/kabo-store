@@ -18,16 +18,64 @@
 .css-5wly58-MuiDataGrid-root {
   border: none !important;
 }
-.product-modal {
+.product-modal-container {
   height: 100vh;
-  max-height: 800px;
   width: 100vw;
-  max-width: 800px;
-  background-color: $White;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  .product-modal {
+    width: 400px;
+    box-sizing: border-box;
+    padding: 20px;
+    min-height: 400px;
+    background-color: $White;
+    align-items: center;
+    border-radius: 10px;
+    .action {
+      width: fit-content;
+      padding: 0 !important;
+      border: none;
+      outline: none;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+    }
 
-  .image {
-    height: 200px;
-    width: 200px;
+    .image {
+      height: 200px;
+      width: 200px;
+    }
+    .name,
+    .image,
+    .amount,
+    .details {
+      margin-top: 10px;
+    }
+    .details {
+      overflow-y: auto;
+      max-height: 120px;
+    }
+
+    // Begin Edit Product Form Styling
+    .edit-image-container {
+      justify-content: center;
+      margin-top: 20px;
+      img {
+        height: 100px;
+        width: 100px;
+        transition-duration: 0.12s;
+        cursor: pointer;
+        border: 1px solid transparent;
+        &:hover {
+          opacity: 0.65;
+          border-color: rgba(73, 73, 73, 0.201);
+        }
+      }
+    }
   }
 }
