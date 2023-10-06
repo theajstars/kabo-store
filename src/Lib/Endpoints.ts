@@ -9,6 +9,7 @@ const Endpoints = {
 
   GetProducts: "/store/products",
   CreateNewProduct: "/store/add-product",
+  UpdateProduct: "/store/update-product",
 
   GetProductCategory: "/store/category",
   GetSubCategory: "/store/sub-category",

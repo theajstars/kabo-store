@@ -25,8 +25,8 @@ import Logo from "../../Assets/IMG/Logo.png";
 
 interface ProductFormProps {
   name?: string;
+  details?: string;
   amount?: number;
-  weight?: number;
   quantity?: number;
   main_photo?: string;
 }
@@ -43,6 +43,7 @@ export default function Products() {
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isProductEdit, setProductEdit] = useState<boolean>(false);
+  const [isProductUpdating, setProductUpdating] = useState<boolean>(false);
   const [isProductImageUploading, setProductImageUploading] =
     useState<boolean>(false);
   const [isProductModalVisible, setProductModalVisible] =
@@ -99,17 +100,18 @@ export default function Products() {
             className="pointer"
             onClick={() => {
               const p = params.row;
+              console.log(p);
               setCurrentProduct(p);
               setProductModalVisible(true);
+              const { amount, name, quantity, main_photo, details } = p;
               setProductForm({
-                name: p.name,
-                amount: parseInt(
-                  p.amount && p.amount.length > 0 ? p.amount : "0"
-                ),
+                name,
+                amount: parseInt(amount && amount.length > 0 ? amount : "0"),
                 quantity: parseInt(
-                  p.quantity && p.quantity.length > 0 ? p.quantity : "0"
+                  quantity && quantity.length > 0 ? quantity : "0"
                 ),
-                main_photo: p.main_photo,
+                main_photo,
+                details,
               });
             }}
           >
@@ -179,6 +181,26 @@ export default function Products() {
     } else {
       return DefaultProductImage;
     }
+  };
+
+  const UpdateProduct = async () => {
+    const { name, details, amount, quantity } = productForm;
+    setProductUpdating(true);
+    const r = await PerformRequest({
+      route: Endpoints.UpdateProduct,
+      method: "POST",
+      data: {
+        token: Cookies.get("token"),
+        name,
+        quantity,
+        details,
+        amount,
+        id: currentProduct?.id,
+      },
+    }).catch(() => {
+      setProductUpdating(false);
+    });
+    setProductUpdating(false);
   };
   return (
     <div className="products-container flex-col width-100">
@@ -353,11 +375,13 @@ export default function Products() {
                                 Upload Image
                               </Button>
                             </div>
+                            <br />
                             <TextField
                               label="Product Name"
                               id="outlined-size-small"
                               defaultValue="Small"
                               size="small"
+                              fullWidth
                               value={productForm.name}
                               onChange={(e) => {
                                 setProductForm({
@@ -366,6 +390,68 @@ export default function Products() {
                                 });
                               }}
                             />
+                            <br />
+                            <div className="flex-row align-center width-100 justify-between">
+                              <TextField
+                                label="Price"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                                type="number"
+                                value={productForm.amount}
+                                onChange={(e) => {
+                                  setProductForm({
+                                    ...productForm,
+                                    amount: parseInt(e.target.value),
+                                  });
+                                }}
+                              />
+                              &nbsp; &nbsp;
+                              <TextField
+                                label="Quantity"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                                type="number"
+                                value={productForm.quantity}
+                                onChange={(e) => {
+                                  setProductForm({
+                                    ...productForm,
+                                    quantity: parseInt(e.target.value),
+                                  });
+                                }}
+                              />
+                            </div>
+                            <br />
+                            <TextField
+                              id="outlined-multiline-flexible"
+                              label="Product Details"
+                              multiline
+                              fullWidth
+                              rows={4}
+                              value={productForm.details}
+                              onChange={(e) => {
+                                setProductForm({
+                                  ...productForm,
+                                  details: e.target.value,
+                                });
+                              }}
+                            />
+                            <br />
+                            <Button
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                UpdateProduct();
+                              }}
+                            >
+                              {isProductUpdating ? (
+                                <ProgressCircle />
+                              ) : (
+                                "Submit"
+                              )}
+                            </Button>
                           </>
                         )}
                       </>
