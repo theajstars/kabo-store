@@ -13,7 +13,11 @@ import { Product, User } from "../../Lib/Types";
 import "./styles.scss";
 import { PerformRequest } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
-import { GetProductsResponse, LoginResponse } from "../../Lib/Responses";
+import {
+  DefaultResponse,
+  GetProductsResponse,
+  LoginResponse,
+} from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
 import ProgressCircle from "../../Misc/ProgressCircle";
@@ -186,7 +190,8 @@ export default function Products() {
   const UpdateProduct = async () => {
     const { name, details, amount, quantity } = productForm;
     setProductUpdating(true);
-    const r = await PerformRequest({
+    console.log({ name, details, amount, quantity });
+    const r: DefaultResponse = await PerformRequest({
       route: Endpoints.UpdateProduct,
       method: "POST",
       data: {
@@ -195,11 +200,20 @@ export default function Products() {
         quantity,
         details,
         amount,
+        store_id: Cookies.get("user_store_id"),
         id: currentProduct?.id,
       },
     }).catch(() => {
       setProductUpdating(false);
     });
+    if (r && r.data && r.data.status === "success") {
+      addToast("Product Updated!", { appearance: "success" });
+      getProducts();
+      setCurrentProduct(null);
+      setProductModalVisible(false);
+    } else {
+      addToast(r.data.message, { appearance: "error" });
+    }
     setProductUpdating(false);
   };
   return (

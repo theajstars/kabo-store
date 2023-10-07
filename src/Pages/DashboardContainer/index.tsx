@@ -41,16 +41,21 @@ export default function DashboardContainer() {
 
   const getUser = async () => {
     const token = Cookies.get("token");
-    const r: LoginResponse = await PerformRequest({
-      route: Endpoints.GetUserDetails,
-      method: "POST",
-      data: { token: token },
-    });
-    console.log(r);
-    if (r.data && r.data.data) {
-      setUser(r.data.data);
-    } else {
+    const storeID = Cookies.get("user_store_id");
+    if (!storeID || !token) {
       navigate("/login");
+    } else {
+      const r: LoginResponse = await PerformRequest({
+        route: Endpoints.GetUserDetails,
+        method: "POST",
+        data: { token: token },
+      });
+      console.log(r);
+      if (r.data && r.data.data) {
+        setUser(r.data.data);
+      } else {
+        navigate("/login");
+      }
     }
   };
   const getUserStore = async () => {
