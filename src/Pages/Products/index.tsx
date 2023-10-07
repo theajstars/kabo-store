@@ -11,12 +11,13 @@ import { Button, Modal, Grid, TextField } from "@mui/material";
 import { Product, User } from "../../Lib/Types";
 
 import "./styles.scss";
-import { PerformRequest } from "../../Lib/PerformRequest";
+import { PerformRequest, UploadFile } from "../../Lib/PerformRequest";
 import { Endpoints } from "../../Lib/Endpoints";
 import {
   DefaultResponse,
   GetProductsResponse,
   LoginResponse,
+  UploadFileResponse,
 } from "../../Lib/Responses";
 import MegaLoader from "../../Misc/MegaLoader";
 import { AppContext } from "../DashboardContainer";
@@ -187,6 +188,34 @@ export default function Products() {
     }
   };
 
+  const UploadStoreImage = async () => {
+    removeAllToasts();
+    if (tempProductImage) {
+      setProductImageUploading(true);
+      const r: UploadFileResponse = await UploadFile(tempProductImage).catch(
+        () => {
+          setProductImageUploading(false);
+        }
+      );
+      if (r && r.data && r.data.status === "success") {
+        const r2: DefaultResponse = await PerformRequest({
+          route: Endpoints.UpdateProduct,
+          method: "POST",
+          data: { token: Cookies.get("token") },
+        }).catch(() => {
+          setProductImageUploading(false);
+        });
+        setProductImageUploading(false);
+        if (r2 && r2.data && r2.data.status === "success") {
+          addToast("Product Image Updated", { appearance: "success" });
+        } else {
+          addToast("An error occurred!", { appearance: "error" });
+        }
+      }
+    } else {
+      addToast("Please select an image!", { appearance: "error" });
+    }
+  };
   const UpdateProduct = async () => {
     const { name, details, amount, quantity } = productForm;
     setProductUpdating(true);
@@ -385,8 +414,15 @@ export default function Products() {
                                   isProductImageUploading ||
                                   !tempProductImage
                                 }
+                                onClick={() => {
+                                  UploadStoreImage();
+                                }}
                               >
-                                Upload Image
+                                {isProductImageUploading ? (
+                                  <ProgressCircle />
+                                ) : (
+                                  "Upload Image"
+                                )}
                               </Button>
                             </div>
                             <br />
