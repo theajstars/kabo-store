@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 
-import { Button, Box, TextField, MenuItem } from "@mui/material";
+import { Button, Box, TextField, MenuItem, Container } from "@mui/material";
 import { useToasts } from "react-toast-notifications";
 import Cookies from "js-cookie";
 
@@ -45,6 +45,9 @@ export default function NewProduct() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 
+  const formRowInputProps = {
+    className: "form-row-half",
+  };
   const [product, setProduct] = useState<NewProductProps>({
     name: "",
 
@@ -207,179 +210,175 @@ export default function NewProduct() {
             </div>
           </div>
 
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              label="Name"
-              spellCheck={false}
-              variant="outlined"
-              value={product.name}
-              onChange={(e) => setProduct({ ...product, name: e.target.value })}
-            />
-            <TextField
-              variant="outlined"
-              label="Amount"
-              type="number"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              value={product.amount}
-              onChange={(e) =>
-                setProduct({ ...product, amount: parseInt(e.target.value) })
-              }
-            />
-          </Box>
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              variant="outlined"
-              label="Quantity"
-              type="number"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              value={product.quantity}
-              onChange={(e) =>
-                setProduct({ ...product, quantity: parseInt(e.target.value) })
-              }
-            />
-            <TextField
-              variant="outlined"
-              label="Weight (KG)"
-              type="number"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              value={product.weight}
-              onChange={(e) =>
-                setProduct({ ...product, weight: parseInt(e.target.value) })
-              }
-            />
-          </Box>
-          <TextField
-            select
-            disabled
-            label="Store"
-            sx={{
-              width: "51.5ch",
-            }}
-            value={userContext.store?.store_id}
-          >
-            <MenuItem value={userContext.store?.store_id}>
-              {userContext.store?.name}
-            </MenuItem>
-          </TextField>
-          <TextField
-            spellCheck={false}
-            onChange={(e) => {
-              setProduct({ ...product, details: e.target.value });
-              console.log(e.target.value);
-            }}
-            label="Product Details"
-            value={product.details}
-            rows={4}
-            sx={{
-              m: 1,
-              width: "51.5ch",
-            }}
-            multiline
-          />
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              select
-              label="Category"
-              value={product.category}
-              onChange={(e) => {
-                setProduct({ ...product, category: e.target.value });
-                if (e.target.value && e.target.value.length > 0) {
-                  getSubCategories(e.target.value);
+          <Container maxWidth="md">
+            <div className="form-row flex-row align-center justify-between width-100">
+              <TextField
+                {...formRowInputProps}
+                label="Name"
+                spellCheck={false}
+                variant="outlined"
+                value={product.name}
+                onChange={(e) =>
+                  setProduct({ ...product, name: e.target.value })
                 }
-              }}
-            >
-              {categories.map((category) => (
-                <MenuItem
-                  key={category.category_id}
-                  value={category.category_id}
-                >
-                  {category.category_name}
-                </MenuItem>
-              ))}
-            </TextField>
+              />
+              <TextField
+                {...formRowInputProps}
+                variant="outlined"
+                label="Amount"
+                type="number"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                value={product.amount}
+                onChange={(e) =>
+                  setProduct({ ...product, amount: parseInt(e.target.value) })
+                }
+              />
+            </div>
+            <br />
+            <div className="form-row flex-row align-center justify-between width-100">
+              <TextField
+                {...formRowInputProps}
+                variant="outlined"
+                label="Quantity"
+                type="number"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                value={product.quantity}
+                onChange={(e) =>
+                  setProduct({ ...product, quantity: parseInt(e.target.value) })
+                }
+              />
+              <TextField
+                {...formRowInputProps}
+                variant="outlined"
+                label="Weight (KG)"
+                type="number"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                value={product.weight}
+                onChange={(e) =>
+                  setProduct({ ...product, weight: parseInt(e.target.value) })
+                }
+              />
+            </div>
+            <br />
 
             <TextField
               select
-              label="Sub Category"
-              disabled={product.category?.length === 0}
-              value={product.subCategory}
+              disabled
+              label="Store"
+              fullWidth
+              value={userContext.store?.store_id}
+            >
+              <MenuItem value={userContext.store?.store_id}>
+                {userContext.store?.name}
+              </MenuItem>
+            </TextField>
+            <br />
+            <br />
+
+            <TextField
+              spellCheck={false}
               onChange={(e) => {
-                setProduct({ ...product, subCategory: e.target.value });
+                setProduct({ ...product, details: e.target.value });
                 console.log(e.target.value);
               }}
-            >
-              {subCategories.map((subcat) => (
-                <MenuItem
-                  key={subcat.sub_category_id}
-                  value={subcat.sub_category_id}
-                >
-                  {subcat.sub_category_name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Box>
-          <br />
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "51ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <div className="flex-col width-100 align-center align-start">
-              <div className="pointer flex-row align-center">
-                {productFile && (
-                  <img
-                    src={URL.createObjectURL(productFile)}
-                    alt=""
-                    className="product-image"
-                  />
-                )}{" "}
-                &nbsp; {isImageUploading && <ProgressCircle />}
-              </div>
-              &nbsp;
-              <div className="flex-row align-center">
-                <span
-                  className="pointer text-blue-default"
-                  onClick={() => productImageRef.current?.click()}
-                >
-                  Select Image
-                </span>
-              </div>
+              label="Product Details"
+              value={product.details}
+              rows={4}
+              fullWidth
+              multiline
+            />
+            <br />
+            <br />
+
+            <div className="form-row flex-row align-center justify-between width-100">
+              <TextField
+                {...formRowInputProps}
+                select
+                label="Category"
+                value={product.category}
+                onChange={(e) => {
+                  setProduct({ ...product, category: e.target.value });
+                  if (e.target.value && e.target.value.length > 0) {
+                    getSubCategories(e.target.value);
+                  }
+                }}
+              >
+                {categories.map((category) => (
+                  <MenuItem
+                    key={category.category_id}
+                    value={category.category_id}
+                  >
+                    {category.category_name}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                {...formRowInputProps}
+                select
+                label="Sub Category"
+                disabled={product.category?.length === 0}
+                value={product.subCategory}
+                onChange={(e) => {
+                  setProduct({ ...product, subCategory: e.target.value });
+                  console.log(e.target.value);
+                }}
+              >
+                {subCategories.map((subcat) => (
+                  <MenuItem
+                    key={subcat.sub_category_id}
+                    value={subcat.sub_category_id}
+                  >
+                    {subcat.sub_category_name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
-          </Box>
+            <br />
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "51ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <div className="flex-col width-100 align-center align-start">
+                <div className="pointer flex-row align-center">
+                  {productFile && (
+                    <img
+                      src={URL.createObjectURL(productFile)}
+                      alt=""
+                      className="product-image"
+                    />
+                  )}{" "}
+                  &nbsp; {isImageUploading && <ProgressCircle />}
+                </div>
+                &nbsp;
+                <div className="flex-row align-center">
+                  <span
+                    className="pointer text-blue-default"
+                    onClick={() => productImageRef.current?.click()}
+                  >
+                    Select Image
+                  </span>
+                </div>
+              </div>
+            </Box>
+            <br />
+            <div className="flex-row align-center justify-center width-100">
+              <Button
+                onClick={CreateNewProduct}
+                sx={{ height: "37px", width: "200px", fontSize: "12px" }}
+                variant="contained"
+                type="button"
+                disabled={isLoading || isImageUploading}
+              >
+                {isLoading || isImageUploading ? <ProgressCircle /> : "Create"}
+              </Button>
+            </div>
+          </Container>
           <br />
-          <Button
-            onClick={CreateNewProduct}
-            sx={{ height: "35px", width: "150px", fontSize: "12px" }}
-            variant="contained"
-            type="button"
-            disabled={isLoading || isImageUploading}
-          >
-            {isLoading || isImageUploading ? <ProgressCircle /> : "Create"}
-          </Button>
           <br />
         </>
       ) : (

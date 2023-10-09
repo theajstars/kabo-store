@@ -4,6 +4,12 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+
+  .form-row {
+    .form-row-half {
+      width: 49%;
+    }
+  }
   .top {
     box-sizing: border-box;
     padding: 30px;
@@ -11,5 +17,18 @@
   .product-image {
     height: 150px;
     object-fit: contain;
+  }
+  @media screen and (max-width: 610px) {
+    & {
+      .form-row {
+        flex-direction: column;
+        .form-row-half {
+          width: 100% !important;
+          &:last-child {
+            margin-top: 30px;
+          }
+        }
+      }
+    }
   }
 }
